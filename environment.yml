@@ -1,0 +1,6 @@
+name: erum-demo
+channels:
+    - conda-forge
+dependencies:
+  - python=3.14
+  - numpy>=2.5.1
