@@ -8,11 +8,18 @@ version = "0.1.0"
 description = "A small demo package for the ErUM-Data-Hub Python Bridge School"
 readme = "README.md"
 requires-python = ">=3.13"
+authors = [
+  { name = "Anno Knierim", email = "anno.knierim@tu-dortmund.de" },
+]
 dependencies = [
     "numpy>=2.5.1",
 ]
 
 [dependency-groups]
+dev = [
+    "pre-commit>=4.6.1",
+    { include-group = "tests" },
+]
 tests = [
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
