@@ -71,7 +71,7 @@ jobs:
 
       - name: Install dependencies
         if: matrix.install-method == 'mamba'
-        env: 
+        env:
           PYTHON_VERSION: ${{ matrix.python-version }}
         run: |
           python --version
