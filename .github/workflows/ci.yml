@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "**"
+    pull_request:
+
+env:
+  PYTEST_ADDOPTS: --color=yes
+  GITHUB_PR_NUMBER: ${{ github.event.number }}
+
+jobs:
+  tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python-version: "3.14"
+            install-method: "mamba"
+
+          - os: ubuntu-latest
+            python-version: "3.14"
+            install-method: uv
+            extra-args: ["codecov"]
+
+          - os: ubuntu-latest
+            python-version: "3.13"
+            install-method: uv
+
+          - os: macos-latest
+            python-version: "3.14"
+            install-method: uv
+
+    defaults:
+      run:
+        # We need login shells (-l) for micromamba to work.
+        shell: bash -leo pipefail {0}
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Prepare mamba installation
+        if: matrix.install-method == 'mamba'
+        env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
+        run: |
+          # setup correct python version
+          sed -i -e "s/- python=.*/- python=$PYTHON_VERSION/g" environment.yml
+
+      - name: mamba setup
+        if: matrix.install-method == 'mamba'
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          environment-file: environment.yml
+          cache-downloads: true
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9
+
+      - name: Install dependencies
+        if: matrix.install-method == 'uv'
+        run: uv sync --locked --all-extras --dev
+
+      - name: Install dependencies
+        if: matrix.install-method == 'mamba'
+        env: 
+          PYTHON_VERSION: ${{ matrix.python-version }}
+        run: |
+          python --version
+          uv pip install --group tests -e .
+          uv pip freeze
+          uv pip list
+
+      - name: Run tests
+        run: uv run pytest -vv tests
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
