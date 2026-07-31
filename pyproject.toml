@@ -13,10 +13,7 @@ dependencies = [
 ]
 
 [dependency-groups]
-tests = [
-    "pytest>=9.1.1",
-    "pytest-cov>=7.1.0",
-]
+tests = []
 
 [tool.hatch.version]
 source = "vcs"
