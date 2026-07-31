@@ -67,7 +67,7 @@ jobs:
 
       - name: Install dependencies
         if: matrix.install-method == 'uv'
-        run: uv sync --locked --all-extras --dev
+        run: uv sync --locked --all-extras --group tests
 
       - name: Install dependencies
         if: matrix.install-method == 'mamba'
