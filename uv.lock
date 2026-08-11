@@ -84,7 +84,7 @@ wheels = [
 ]
 
 [[package]]
-name = "erum-demo"
+name = "erum-py-bridge-demo-26"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
