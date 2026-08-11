@@ -24,16 +24,16 @@ jobs:
 
           - os: ubuntu-latest
             python-version: "3.14"
-            install-method: uv
+            install-method: "uv"
             extra-args: ["codecov"]
 
           - os: ubuntu-latest
             python-version: "3.13"
-            install-method: uv
+            install-method: "uv"
 
           - os: macos-latest
             python-version: "3.14"
-            install-method: uv
+            install-method: "uv"
 
     defaults:
       run:
@@ -59,7 +59,7 @@ jobs:
         uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
         with:
           environment-file: environment.yml
-          cache-downloads: true
+          cache-downloads: false
 
       - name: Install uv
         uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
@@ -86,5 +86,5 @@ jobs:
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5.5.5
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
